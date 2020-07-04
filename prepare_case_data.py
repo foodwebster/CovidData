@@ -31,6 +31,7 @@ def get_case_data(start_date=None):
         df.loc[has_pop, 'cases_per_100k'] = 1e5 * df.loc[has_pop, 'cases']/df.population[has_pop]
         df.loc[has_pop, 'deaths_per_100k'] = 1e5 * df.loc[has_pop, 'deaths']/df.population[has_pop]
         df.loc[has_pop, 'new_cases_per_100k'] = 1e5 * df.loc[has_pop, 'new_cases']/df.population[has_pop]
+        df.loc[has_pop, 'new_deaths_per_100k'] = 1e5 * df.loc[has_pop, 'new_deaths']/df.population[has_pop]
         
     
     cases_df = pd.read_csv(cases_url)
