@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import pandas as pd
-import numpy as np
-
-import common as cmn
 
 
 def get_case_data(start_date=None):
@@ -26,6 +23,8 @@ def get_case_data(start_date=None):
                 mask = df[grp] == val
                 df.loc[mask, 'new_cases'] = (df.loc[mask, 'cases'] - df.loc[mask, 'cases'].shift(1, fill_value=0)).rolling(7).mean().fillna(0)
                 df.loc[mask, 'new_deaths'] = (df.loc[mask, 'deaths'] - df.loc[mask, 'deaths'].shift(1, fill_value=0)).rolling(7).mean().fillna(0)
+                df.new_cases[df.new_cases < 0] = 0
+                df.new_deaths[df.new_deaths < 0] = 0
         has_pop = df.population > 0
         df['cases_per_100k'] = df['deaths_per_100k'] = df['new_cases_per_100k'] = 0
         df.loc[has_pop, 'cases_per_100k'] = 1e5 * df.loc[has_pop, 'cases']/df.population[has_pop]

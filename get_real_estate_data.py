@@ -3,6 +3,7 @@
 import pandas as pd
 import common as cmn
 
+#def get_home_value_data():
 zipfips = cmn.datapath/'ZipFips.csv'
 
 zillow_home_value = 'http://files.zillowstatic.com/research/public_v2/zhvi/County_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_mon.csv'
@@ -33,3 +34,4 @@ zhv_df = zhv_df.stack().reset_index()
 zhv_df.columns = ['fips', 'date', 'rent_index']
 zhv_df.date = pd.to_datetime(zhv_df.date)
 
+#    return zhv_df
