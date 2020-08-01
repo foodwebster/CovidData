@@ -11,6 +11,7 @@ from datetime import datetime
 from prepare_case_data import get_case_data
 from prepare_movement_data import get_movement_data
 from prepare_demog_data import get_demog_data
+from get_employment_data import get_monthly_county_employment_data
 
 def load_data():
     '''
@@ -24,12 +25,19 @@ def load_data():
     start_date = datetime(2020, 2, 15)
     
     # covid case data
+    print("Getting case data")
     country_case_df, state_case_df, county_case_df = get_case_data(start_date)
     # google mobility data
+    print("Getting mobility data")
     country_mmt_df, state_mmt_df, county_mmt_df = get_movement_data(start_date)
     # county-level demographics
+    print("Getting demographic data")
     country_demog_df, state_demog_df, county_demog_df = get_demog_data()
+    # employment data
+    print("Getting unemployment data")
+    national_unemp_rate, state_edf, county_edf = get_monthly_county_employment_data()
     
+    print("Merging datasets")    
     # make country time series data - join case and movement data
     dropcol = ['country_region_code', 'country_region', 'sub_region_1', 'sub_region_2']
     country_df = country_case_df.join(country_mmt_df.drop(columns=dropcol), how='left')
