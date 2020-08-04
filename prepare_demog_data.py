@@ -18,13 +18,13 @@ def get_demog_data(start_date=None):
     
     demog_file = cmn.datapath/'CountyDemographics2015.xlsx'
     demog_df = pd.read_excel(demog_file)
-    demog_df['fips_str'] = demog_df.id.apply(lambda x: "%05d"%x)
+    demog_df['FIPS'] = demog_df.id.apply(lambda x: "%05d"%x)
     
     demog_attr = ['AREA_SQMI', 'TotalPop', 'White',
        'IncomePerCap', 'Poverty', 'ChildPoverty', 'Service', 'Production',
        'dem_gop_diff_16', 'FBFilterBubble'
        ]
-    all_attr = ['STATE', 'fips_str'] + demog_attr
+    all_attr = ['STATE', 'FIPS'] + demog_attr
     demog_df = demog_df[all_attr]
     
     demog_df.IncomePerCap = demog_df.IncomePerCap * demog_df.TotalPop
@@ -52,7 +52,7 @@ def get_demog_data(start_date=None):
        'Service', 'Production', 'dem_gop_diff_16','FBFilterBubble'
        ]
     compute_attr(demog_df)
-    demog_df = demog_df[['fips_str'] + final_attr]
+    demog_df = demog_df[['FIPS'] + final_attr]
     
     compute_attr(state_df)
     state_df = state_df[['State'] + final_attr]

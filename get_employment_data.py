@@ -35,22 +35,26 @@ def get_monthly_county_employment_data():
     daily_dfs = []
     for idx, fips in enumerate(df.FIPS.unique()):
         if idx%100 == 0:
-            print("Processing %d"%idx)
+            print("Processing county %d"%idx)
         fdf = df[df.FIPS == fips]
+        state = fdf.State.iloc[0]
         days = pd.date_range(start=fdf.index.min(), end=fdf.index.max(), freq='D')
         new_df = fdf.reindex(days)
         new_df = new_df.interpolate(method='index')
         new_df.FIPS = fips
+        new_df.State = state
         daily_dfs.append(new_df)
     edf = pd.concat(daily_dfs).reset_index().rename(columns={'index': 'date'})
     state_edf = edf.groupby(['State', 'date']).agg({'Employed': 'sum', 'Unemployed': 'sum', 'LaborForce': 'sum'})
     state_edf['UnempRate'] = state_edf.Unemployed/state_edf.LaborForce
+    
     country_edf = state_edf.groupby('date').agg({'Employed': 'sum', 'Unemployed': 'sum', 'LaborForce': 'sum'})
     country_edf['UnempRate'] = country_edf.Unemployed/country_edf.LaborForce
-    return country_edf, state_edf, edf
+    
+    return country_edf, state_edf.reset_index(), edf
 
 # weekly unemployment claims
 # https://oui.doleta.gov/unemploy/claims.asp
 
-
-#national_unemp_rate, state_edf, county_edf = get_monthly_county_employment_data()
+if __name__ == "__main__":
+    country_edf, state_edf, county_edf = get_monthly_county_employment_data()

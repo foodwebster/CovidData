@@ -10,21 +10,23 @@ def get_movement_data(start_date=None):
         if grp is None:
              df[attr] = df[attr].rolling(7).mean().fillna(0)
         else:
-            for val in df[grp].unique():
-                mask = df[grp] == val
-                new_vals = df.loc[mask, attr].rolling(7).mean().fillna(0)
+            for idx, val in enumerate(df[grp].unique()):
+                if idx % 0 == 0:
+                    print("Smoothing movement data for %s %s"%(grp, idx))
+                mask = (df[grp] == val)
+                new_vals = df.loc[mask, attr].rolling(7).mean()
                 # fill initial unsmoothed values
                 new_vals.iloc[0:6] = df.loc[mask, attr].iloc[0:6]
                 df.loc[mask, attr] = new_vals
+            df[attr].fillna(0, inplace=True)
             
     #google_file = cmn.datapath/'Google_US_Mobility_Report.csv'
     google_url = 'https://www.gstatic.com/covid19/mobility/Global_Mobility_Report.csv'
     
-    fips_file = cmn.datapath/'fips_codes.csv'
     abbr_file = cmn.datapath/'state_abbreviations.csv'
     # get the google movement data, fips and state abbreviations
     df = pd.read_csv(google_url)
-    fips_df = pd.read_csv(fips_file)
+    fips_df = cmn.get_fips()
     abbr_df = pd.read_csv(abbr_file)
     
     # strip non-US data from google file
@@ -52,8 +54,9 @@ def get_movement_data(start_date=None):
     state_df = df[(~df.sub_region_1.isnull()) & df.sub_region_2.isnull()]
     # add fips    
     county_df = df.merge(fips_df, left_on=['Abbreviation', 'sub_region_2'], right_on=['State', 'Name'])
-    county_df['fips_str'] = county_df.FIPS.apply(lambda x: "%05d"%x)
+    county_df['FIPS'] = county_df.FIPS.apply(lambda x: "%05d"%x)
     
+    print("Smoothing movement data")
     smooth_data(county_df, overall, 'FIPS')
     smooth_data(state_df, overall, 'State')
     smooth_data(country_df, overall, None)
