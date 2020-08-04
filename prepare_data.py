@@ -107,7 +107,7 @@ def get_latest_data():
     final_attr = ['AREA_SQMI', 'White',
        'IncomePerCap', 'Poverty', 'ChildPoverty',
        'Service', 'Production', 'dem_gop_diff_16','FBFilterBubble',
-       'UnEmpRate', 
+       #'UnEmpRate', 
        #'rent_index', 'home_value'
        ]
     for attr in final_attr:
