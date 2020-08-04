@@ -11,7 +11,7 @@ def get_movement_data(start_date=None):
              df[attr] = df[attr].rolling(7).mean().fillna(0)
         else:
             for idx, val in enumerate(df[grp].unique()):
-                if idx % 0 == 0:
+                if idx % 100 == 0:
                     print("Smoothing movement data for %s %s"%(grp, idx))
                 mask = (df[grp] == val)
                 new_vals = df.loc[mask, attr].rolling(7).mean()

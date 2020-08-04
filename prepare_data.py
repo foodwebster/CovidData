@@ -49,7 +49,7 @@ def get_latest_data():
     # add employment
     country_df = country_df.join(country_edf['UnempRate'], how='left')
     # add zillow
-    country_df = country_df.merge(country_zdf, on=['date'], how='left')
+    #country_df = country_df.merge(country_zdf, on=['date'], how='left')
     # add demographics
     country_df = pd.concat([country_df, 
                             pd.DataFrame(np.repeat(country_demog_df.to_numpy(), len(country_df), axis=0), 
@@ -69,7 +69,7 @@ def get_latest_data():
     # add employment
     state_df = state_df.merge(state_edf[['State', 'date', 'UnempRate']], on=['State', 'date'], how='left')
     # add zillow
-    state_df = state_df.merge(state_zdf, on=['State', 'date'], how='left')
+    #state_df = state_df.merge(state_zdf, on=['State', 'date'], how='left')
     # add state demographics
     state_df = state_df.merge(state_demog_df, on='State')
     
@@ -92,7 +92,7 @@ def get_latest_data():
     # add employment
     county_df = county_df.merge(county_edf[['FIPS', 'date', 'UnempRate']], on=['FIPS', 'date'], how='left')
     # add zillow
-    county_df = county_df.merge(county_zdf[['FIPS', 'date', 'rent_index', 'home_value']], on=['FIPS', 'date'], how='left')
+    #county_df = county_df.merge(county_zdf[['FIPS', 'date', 'rent_index', 'home_value']], on=['FIPS', 'date'], how='left')
     # add county-level demographic data
     county_df = county_df.merge(county_demog_df, on='FIPS', how='left')
     # movement dataset lags current date - 
@@ -107,7 +107,8 @@ def get_latest_data():
     final_attr = ['AREA_SQMI', 'White',
        'IncomePerCap', 'Poverty', 'ChildPoverty',
        'Service', 'Production', 'dem_gop_diff_16','FBFilterBubble',
-       'rent_index', 'home_value'
+       'UnEmpRate', 
+       #'rent_index', 'home_value'
        ]
     for attr in final_attr:
         county_df[attr] = county_df[attr].fillna(country_df[attr]).fillna(0)

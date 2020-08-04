@@ -45,6 +45,7 @@ def get_monthly_county_employment_data():
         new_df.State = state
         daily_dfs.append(new_df)
     edf = pd.concat(daily_dfs).reset_index().rename(columns={'index': 'date'})
+
     state_edf = edf.groupby(['State', 'date']).agg({'Employed': 'sum', 'Unemployed': 'sum', 'LaborForce': 'sum'})
     state_edf['UnempRate'] = state_edf.Unemployed/state_edf.LaborForce
     
