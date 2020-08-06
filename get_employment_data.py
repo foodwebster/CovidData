@@ -35,7 +35,7 @@ def get_monthly_county_employment_data():
     daily_dfs = []
     for idx, fips in enumerate(df.FIPS.unique()):
         if idx%100 == 0:
-            print("Processing county %d"%idx)
+            print("Interpolating unemployment data for county %d"%idx)
         fdf = df[df.FIPS == fips]
         state = fdf.State.iloc[0]
         days = pd.date_range(start=fdf.index.min(), end=fdf.index.max(), freq='D')

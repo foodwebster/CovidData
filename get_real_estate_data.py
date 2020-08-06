@@ -47,8 +47,22 @@ def get_zillow_data():
     # convert date string to datetime
     zhv_df.date = pd.to_datetime(zhv_df.date)
     
-    # merge home price and rental index data to produce final country-level datset
+    # merge home price and rental index data to produce the county-level datset
     zdf = zri_df.merge(zhv_df, on=['FIPS', 'date'], how='outer')
+
+    # add days and interpolate to get daily data for each county
+    zdf.set_index('date', inplace=True)
+    daily_dfs = []
+    for idx, fips in enumerate(zdf.FIPS.unique()):
+        if idx%100 == 0:
+            print("Interpolating real estate data for county %d"%idx)
+        fdf = zdf[zdf.FIPS == fips]
+        days = pd.date_range(start=fdf.index.min(), end=fdf.index.max(), freq='D')
+        new_df = fdf.reindex(days)
+        new_df = new_df.interpolate(method='index')
+        new_df.FIPS = fips
+        daily_dfs.append(new_df)
+    zdf = pd.concat(daily_dfs).reset_index().rename(columns={'index': 'date'})
     
     #
     # compute state and country indices by computing population-weighted means of the county-level data
