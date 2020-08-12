@@ -110,24 +110,25 @@ def get_latest_data():
        'UnempRate', 
        'rent_index', 'home_value']
     for attr in final_attr:
-        county_df[attr] = county_df[attr].fillna(country_df[attr]).fillna(0)
-        state_df[attr] = state_df[attr].fillna(country_df[attr]).fillna(0)
+        county_df[attr] = county_df[attr].fillna(country_df[attr]) #.fillna(0)
+        state_df[attr] = state_df[attr].fillna(country_df[attr]) #.fillna(0)
 
     return country_df.reset_index(), state_df, county_df
 
 
-# Get the latest data
-country_df, state_df, county_df = get_latest_data()
+if __name__ == "__main__":
+    # Get the latest data
+    country_df, state_df, county_df = get_latest_data()
+        
+    # Save final datasets to csv files
+    country_df.to_csv("CountryData.csv", index=False)
+    state_df.to_csv("StateData.csv", index=False)
+    county_df.to_csv("CountyData.csv", index=False)
     
-# Save final datasets to csv files
-country_df.to_csv("CountryData.csv", index=False)
-state_df.to_csv("StateData.csv", index=False)
-county_df.to_csv("CountyData.csv", index=False)
-
-# Optionally copy the data to the dashboard folder
-to_dashboard = True
-if to_dashboard:
-    db = "../CovidDashboard/data/"
-    country_df.to_csv(db + "CountryData.csv", index=False)
-    state_df.to_csv(db + "StateData.csv", index=False)
-    county_df.to_csv(db + "CountyData.csv", index=False)
+    # Optionally copy the data to the dashboard folder
+    to_dashboard = True
+    if to_dashboard:
+        db = "../CovidDashboard/data/"
+        country_df.to_csv(db + "CountryData.csv", index=False)
+        state_df.to_csv(db + "StateData.csv", index=False)
+        county_df.to_csv(db + "CountyData.csv", index=False)

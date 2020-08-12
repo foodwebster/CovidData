@@ -39,9 +39,6 @@ def get_demog_data(start_date=None):
 
     # build state-level aggregates
     state_df = demog_df.groupby('STATE')[demog_attr].sum()
-    # build country-level aggregates
-    country_df = pd.DataFrame([state_df.sum(axis=0)])
-                       
     state_df = state_df.reset_index().rename(columns={'STATE': 'State'})
     
     # build country-level aggregates
@@ -58,6 +55,7 @@ def get_demog_data(start_date=None):
     state_df = state_df[['State'] + final_attr]
 
     compute_attr(country_df)
+    country_df = country_df[final_attr]
     
     # fill null values
     for attr in final_attr:
